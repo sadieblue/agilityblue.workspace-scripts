@@ -35,11 +35,10 @@ if ($task.FormNames -like "*$($formName)*") {
   # To update the assignee, we can't set the the AssignedToId directly on the task after the
   # task has already been created. Instead, we need to use the Set-TaskAssignee cmdlet
 
-  # Save the task
+  # Save the assignee to the task. This will cmdlet will return the updated task
   $task = Set-TaskAssignee -TaskId $task.TaskId -UserId $assignToUserId
 
-  Write-Output "Task $($task.TaskId) has been assigned to $($task.AssignedToFullName) (id: $($task.AssignedToId)) becase " +
-    "the task is using the '$($formName)' form"
+  Write-Output "Task $($task.TaskId) has been assigned to $($task.AssignedToFullName) (id: $($task.AssignedToId)) because the task is using the '$($formName)' form"
 } else {
   Write-Output "Task $($task.TaskId) is not using the '$($formName)' form. Auto-assignment will not occur."
 }
