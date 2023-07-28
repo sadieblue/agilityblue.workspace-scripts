@@ -1,3 +1,13 @@
+# ------------------------------------------------------------------------------
+#
+# If a task comment is created that has the text #close-text, close the task.
+# Useful for closing out tasks from email replies.
+#
+# Event triggers to setup:
+#   1) Object: Task Comment, Action: Create
+#
+# ------------------------------------------------------------------------------
+
 if ($null -eq $agilityBlueEvent) {
   # If the event object is not available, it means we are executing the script manually.
   # In this case, we'll set an id directly for testing purposes

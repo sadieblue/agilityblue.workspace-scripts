@@ -1,9 +1,16 @@
-# ----------------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
+#
+# If a billing entry is saved without an on behalf of user, this script will add the
+# created by user to the on behalf of user field.
+#
+# Event triggers to setup:
+#   1) Object: Billing Entry, Action: Create
+#   2) Object: Billing Entry, Action: Update
 #
 # In order for this script to work properly, the Billing Entry object must have a user 
-# reference field named "On Behalf Of"
+#   reference field named "On Behalf Of"
 #
-# ----------------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 
 if ($null -eq $agilityBlueEvent) {
   # If the event object is not available, it means we are executing the script manually.
