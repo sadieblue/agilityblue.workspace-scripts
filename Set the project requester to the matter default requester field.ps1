@@ -1,7 +1,7 @@
 # ------------------------------------------------------------------------------
 #
 # If a project is created that does not have the requester field set, this script
-#   will use the matter default requester field to set it..
+#   will use the matter default requester field to set it.
 #
 # Event triggers to setup:
 #   1) Object: Project, Action: Create
