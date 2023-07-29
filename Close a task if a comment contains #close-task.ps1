@@ -1,6 +1,6 @@
 # ------------------------------------------------------------------------------
 #
-# If a task comment is created that has the text #close-text, close the task.
+# If a task comment is created that has the text #close-task, close the task.
 # Useful for closing out tasks from email replies.
 #
 # Event triggers to setup:
@@ -17,8 +17,9 @@ if ($null -eq $agilityBlueEvent) {
   $taskCommentId = $agilityBlueEvent.Payload.Id
 }
 
-# Here, we are retrieving the comment and expanding the task so we can access task properties.
-$taskComment = Get-TaskComment $taskCommentId -ExpandTask
+# Here, we are retrieving the comment and including the parent task so we can access 
+# task properties.
+$taskComment = Get-TaskComment $taskCommentId -IncludeTask
 
 # We can uncomment this line to output the properties/values available to us
 # $taskComment | ConvertTo-JSON
