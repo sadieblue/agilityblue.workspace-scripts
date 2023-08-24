@@ -90,4 +90,4 @@ $totalBillingAmountCustomField.Value = @{
 # Save the matter
 $matter = Set-Matter $matter
 
-Write-Output "Matter $($matter.MatterId) contains $($count.ToString('N0')) billing entries totaling $($sum.ToString('C'))"
+Write-Output "Matter '$($matter.Name)' (id: $($matter.MatterId)) contains $($count.ToString('N0')) billing entries totaling $($sum.ToString('C'))"
