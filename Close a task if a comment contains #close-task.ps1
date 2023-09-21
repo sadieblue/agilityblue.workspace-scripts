@@ -3,6 +3,10 @@
 # If a task comment is created that has the text #close-task, close the task.
 # Useful for closing out tasks from email replies.
 #
+# ------------------------------------------------------------------------------
+# [Post-Save Event Action]
+#
+# ------------------------------------------------------------------------------
 # Event triggers to setup:
 #   1) Object: Task Comment, Action: Create
 #

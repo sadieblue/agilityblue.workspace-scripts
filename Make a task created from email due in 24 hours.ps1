@@ -2,6 +2,10 @@
 #
 # Make a task that was created from email due in 24 hours.
 #
+# ------------------------------------------------------------------------------
+# [Post-Save Event Action]
+#
+# ------------------------------------------------------------------------------
 # Event triggers to setup:
 #   1) Object: Task, Action: Create
 #

@@ -3,9 +3,14 @@
 # If a project is created that does not have the requester field set, this script
 #   will use the matter default requester field to set it.
 #
+# ------------------------------------------------------------------------------
+# [Post-Save Event Action]
+#
+# ------------------------------------------------------------------------------
 # Event triggers to setup:
 #   1) Object: Project, Action: Create
 #
+# ------------------------------------------------------------------------------
 # In order for this script to work properly, the Matter object must have a contact 
 #   reference field named "Default Requester"
 #

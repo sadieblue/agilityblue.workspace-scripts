@@ -4,13 +4,19 @@
 # the billing entry costs for the matter and update the total billing amount on a 
 # custom field on the matter.
 #
+# ------------------------------------------------------------------------------
+# [Post-Save Event Action]
+#
+# ------------------------------------------------------------------------------
 # Event triggers to setup:
 #   1) Object: Billing Entry, Action: Create
 #   2) Object: Billing Entry, Action: Update
 #
+# ------------------------------------------------------------------------------
 # Custom Fields to setup:
 #   1) Object: Matter, Name: Total Billing Amount, Type: Decimal
 #
+# ------------------------------------------------------------------------------
 # Caveats:
 #   1) This script does not handle deleted billing entries because by the time the
 #      script is executed, the billing entry is already deleted and cannot be queried.  

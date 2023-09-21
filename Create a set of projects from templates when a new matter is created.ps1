@@ -3,6 +3,7 @@
 # When a user creates a new matter, this script will run through a list of project
 # templates and create a new project for each template.
 #
+# ------------------------------------------------------------------------------
 # In addition to automating project and task creation based on project templates,
 # another benefit to using a script to create tasks is that the script can ignore
 # required fields within the forms while creating the task. This allows you to
@@ -10,6 +11,10 @@
 # created from the template, but required when a user wants to update the task
 # within the application.
 #
+# ------------------------------------------------------------------------------
+# [Post-Save Event Action]
+#
+# ------------------------------------------------------------------------------
 # Event triggers to setup:
 #   1) Object: Matter, Action: Create
 #

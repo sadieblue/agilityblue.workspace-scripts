@@ -2,9 +2,14 @@
 #
 # Auto-assign a user to a task if the task uses a specific form
 #
+# ------------------------------------------------------------------------------
+# [Post-Save Event Action]
+#
+# ------------------------------------------------------------------------------
 # Event triggers to setup:
 #   1) Object: Task, Action: Create
 #
+# ------------------------------------------------------------------------------
 # In order for this script to work properly, the $formName field must match the
 # name of an existing form and the $assignToUserId needs to match a user id that
 # exists within the workspace

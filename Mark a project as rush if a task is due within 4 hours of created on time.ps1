@@ -3,6 +3,10 @@
 # Update the priority of the containing project to "Rush" if the task 
 #   due date is within 4 hours from the task created on date.
 #
+# ------------------------------------------------------------------------------
+# [Post-Save Event Action]
+#
+# ------------------------------------------------------------------------------
 # Event triggers to setup:
 #   1) Object: Task, Action: Create
 #   2) Object: Task, Action: Update

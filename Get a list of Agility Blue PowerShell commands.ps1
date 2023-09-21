@@ -3,6 +3,9 @@
 # Run this script to output a list of Agility Blue PowerShell commands.
 #
 # ------------------------------------------------------------------------------
+# [Manual Execution]
+#
+# ------------------------------------------------------------------------------
 
 Get-AgilityBlueCommand
 

@@ -4,6 +4,9 @@
 # If a user already has a state with the same name, they will be skipped.
 #
 # ------------------------------------------------------------------------------
+# [Manual Execution]
+#
+# ------------------------------------------------------------------------------
 
 $gridId = "mattersGrid"
 $gridStateName = "Active Matters"

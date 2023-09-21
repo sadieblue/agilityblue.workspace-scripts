@@ -3,6 +3,7 @@
 # When a user completes a task, this script will create a new task on the same
 # project that uses a QC form.
 #
+# ------------------------------------------------------------------------------
 # In addition to automating project and task creation based on forms,
 # another benefit to using a script to create tasks is that the script can ignore
 # required fields within the forms while creating the task. This allows you to
@@ -10,6 +11,10 @@
 # created from the form, but required when a user wants to update the task
 # within the application.
 #
+# ------------------------------------------------------------------------------
+# [Post-Save Event Action]
+#
+# ------------------------------------------------------------------------------
 # Event triggers to setup:
 #   1) Object: Task, Action: Update
 #
