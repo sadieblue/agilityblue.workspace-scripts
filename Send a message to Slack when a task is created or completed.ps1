@@ -49,7 +49,7 @@ $slackEmoji = ":large_blue_circle:"
 
 # Check the event object to see if this is an update action. If so, we are only interested in completed tasks.
 if ($agilityBlueEvent.Action -eq 2 -and $task.StatusDescription -ne "Completed") {
-  Invoke-Exit "Task updated, but not completed. Skipping further processing."
+  Write-Output "Task updated, but not completed. Skipping further processing."
 } 
 
 if ($task.StatusDescription -eq "Completed") {
