@@ -4,11 +4,8 @@
 #   will use the matter default requester field to set it.
 #
 # ------------------------------------------------------------------------------
-# [Post-Save Event Action]
-#
-# ------------------------------------------------------------------------------
 # Event triggers to setup:
-#   1) Object: Project, Action: Create
+#   1) Object: Project, Action: On Create, Action State: After Save
 #
 # ------------------------------------------------------------------------------
 # In order for this script to work properly, the Matter object must have a contact 
@@ -16,10 +13,10 @@
 #
 # ------------------------------------------------------------------------------
 
-$project = $agilityBlueObject
+$project = Get-InboundObjectInstance
 
 if ($null -eq $project) {
-  # If the event object is not available, it means we are executing the script manually.
+  # If the inbound object is not available, it means we are executing the script manually.
   # In this case, we'll set an id directly for testing purposes
   $project = Get-Project 2023070000001
 }

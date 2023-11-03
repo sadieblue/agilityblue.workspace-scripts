@@ -12,11 +12,8 @@
 # within the application.
 #
 # ------------------------------------------------------------------------------
-# [Post-Save Event Action]
-#
-# ------------------------------------------------------------------------------
 # Event triggers to setup:
-#   1) Object: Task, Action: Update
+#   1) Object: Task, Action: On Update, Action State: After Save
 #
 # ------------------------------------------------------------------------------
 # USER PARAMETERS
@@ -32,19 +29,12 @@ $qcFormId = 6122 # Processing QC Form
 # ------------------------------------------------------------------------------
 # SCRIPT BODY
 
-# The $agilityBlueEvent variable is a special object that Agility Blue populates
-# if the script is triggered by an event. In the case of this script being
-# triggered by a task being updated, the $agilityBlueEvent variable will be
-# available.
-if ($null -eq $agilityBlueEvent) {
-  # If the event object is not available, it means we are executing the script manually.
+$taskId = Get-InboundObjectId
+
+if ($null -eq $taskId) {
+  # If the inbound object id is not available, it means we are executing the script manually.
   # In this case, we'll set an id directly for testing purposes
   $taskId = 29952
-}
-else {
-  # The script was executed by an event, so we'll have access to the event object
-  # Here we get the task id from the event objects, payload id property.
-  $taskId = $agilityBlueEvent.Payload.Id
 }
 
 # Here, we are retrieving the task and including the forms so we can access 
@@ -73,11 +63,7 @@ if (-not ($task.Forms | Where-Object { $_.FormId -eq $taskFormId })) {
 
 $qcTaskAlreadyExists = $false
 
-$tasksInProjectFilters = @(
-  @{ Field = "ProjectId"; Operator = "="; Value = $task.ProjectId }
-)
-
-$tasksInProject = Get-Tasks -Filters $tasksInProjectFilters -Top 1000
+$tasksInProject = Get-Tasks -Filter "ProjectId eq $($task.ProjectId)" -Top 1000
 
 $tasksInProject.Collection | ForEach-Object {
   $taskInProject = Get-Task $_.TaskId -IncludeForms
@@ -99,7 +85,7 @@ if ($qcTaskAlreadyExists) {
 # form id to retrieve the form
 $qcForm = Get-Form $qcFormId
 
-# Create a new task wiht the basic task information
+# Create a new task with the basic task information
 $qcTask = @{
   Name      = $qcForm.Name
   ProjectId = $task.ProjectId

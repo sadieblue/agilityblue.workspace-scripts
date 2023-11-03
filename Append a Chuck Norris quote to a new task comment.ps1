@@ -4,27 +4,31 @@
 # the response to update a task comment prior to saving it to Agility Blue.
 #
 # ------------------------------------------------------------------------------
-# [Pre-Save Event Action]
-# For pre-save event actions to complete successfully, the script must return 
+# Event triggers to setup:
+#   1) Object: Task Comment, Action: On Create, Action State: Before Save
+#
+# ------------------------------------------------------------------------------
+# For before save event actions to complete successfully, the script must return 
 # the same input object type. If anything other than the input object type is returned,
 # Agility Blue will treat that as an error and the save will fail. The last output
 # of the script can be used to provide the error message to the user.
 #
 # ------------------------------------------------------------------------------
-# Event triggers to setup:
-#   1) Object: Task Comment, Action: Create
-#
-# ------------------------------------------------------------------------------
 
-# Agility Blue passes the object being saved into the script as a special variable
-# called $agilityBlueObject. This is the object type that needs to be returned back
-# to Agility Blue in order for the save to be successful.
-$taskComment = $agilityBlueObject
+# The Get-InboundObjectInstance command will give you the object instance that was saved. 
+# The type of object is dependent on the trigger context.
+$taskComment = Get-InboundObjectInstance
+
+# If the task comment is null just return it back to the pipeline.
+if ($null -eq $taskComment) {
+  Write-Output "This script needs to be executed by a trigger"
+  return $taskComment
+}
 
 # The idea here is that we're calling an external API, extracting the result of that
-# external call, and then appending that result to the incoming task comment. We
-# want to wrap the external call in a try-catch block so in the event there was some
-# issue calling the external service, the task comment will still get saved.
+# call, and then appending that result to the incoming task comment. We want to wrap
+# the external call in a try-catch block so in the event there was some issue calling
+# the service, the task comment will still get saved.
 try {
   # The URL to the external service
   $url = "https://api.chucknorris.io/jokes/random"

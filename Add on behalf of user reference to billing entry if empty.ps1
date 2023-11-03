@@ -4,12 +4,9 @@
 # created by user to the on behalf of user field.
 #
 # ------------------------------------------------------------------------------
-# [Post-Save Event Action]
-#
-# ------------------------------------------------------------------------------
 # Event triggers to setup:
-#   1) Object: Billing Entry, Action: Create
-#   2) Object: Billing Entry, Action: Update
+#   1) Object: Billing Entry, Action: On Create, Action State: After Save
+#   2) Object: Billing Entry, Action: On Update, Action State: After Save
 #
 # ------------------------------------------------------------------------------
 # In order for this script to work properly, the Billing Entry object must have a user 
@@ -17,17 +14,17 @@
 #
 # ------------------------------------------------------------------------------
 
-if ($null -eq $agilityBlueEvent) {
-  # If the event object is not available, it means we are executing the script manually.
+# Retrieve the inbound id of the billing entry that was created
+$billingEntryId = Get-InboundObjectId
+
+if ($null -eq $billingEntryId) {
+  # If the id is null, it probably means we are executing the script manually.
   # In this case, we'll set an id directly for testing purposes
   $billingEntryId = 6
-} else {
-  # The script was executed by an event, so we'll have access to the event object
-  $billingEntryId = $agilityBlueEvent.Payload.Id
 }
 
 # Note here that we want to get a full billing entry that includes all custom fields and
-# references. The injected $agilityBlueObject will only provide a shallow version.
+# references. The injected Get-InboundObjectInstance will only provide a shallow version.
 $billingEntry = Get-BillingEntry $billingEntryId
 
 # Uncomment this line to view the available properties/values
@@ -57,7 +54,7 @@ if ($onBehalfOfField.Value.ReferenceObject.Values.Count -eq 0) {
   $onBehalfOfField.Value.ReferenceObject.Values += @{ KeyAsString = $billingEntry.CreatedById }
   
   # Save the billing entry
-  $billingEntry = Set-BillingEntry $billingEntry -BypassCustomFieldValidation $true
+  $billingEntry = Set-BillingEntry $billingEntry -BypassCustomFieldValidation
   
   Write-Output "The on behalf of user field for billing entry $($billingEntry.BillingEntryId) has been updated"
 } else {

@@ -4,21 +4,18 @@
 #   due date is within 4 hours from the task created on date.
 #
 # ------------------------------------------------------------------------------
-# [Post-Save Event Action]
-#
-# ------------------------------------------------------------------------------
 # Event triggers to setup:
-#   1) Object: Task, Action: Create
-#   2) Object: Task, Action: Update
+#   1) Object: Task, Action: On Create, Action State: After Save
+#   2) Object: Task, Action: On Update, Action State: After Save
 #
 # ------------------------------------------------------------------------------
 
 #region Initialization ---------------------------------------------------------
 
-$task = $agilityBlueObject
+$task = Get-InboundObjectInstance
 
 if ($null -eq $task) {
-  # If the event object is not available, it means we are executing the script 
+  # If the inbound object is not available, it means we are executing the script 
   # manually. In this case, we'll get a task directly for testing purposes.
   $task = Get-Task 29858
   

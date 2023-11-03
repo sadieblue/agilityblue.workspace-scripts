@@ -4,25 +4,21 @@
 # Useful for closing out tasks from email replies.
 #
 # ------------------------------------------------------------------------------
-# [Post-Save Event Action]
-#
-# ------------------------------------------------------------------------------
 # Event triggers to setup:
-#   1) Object: Task Comment, Action: Create
+#   1) Object: Task Comment, Action: On Create, Action State: After Save
 #
 # ------------------------------------------------------------------------------
 
-if ($null -eq $agilityBlueEvent) {
-  # If the event object is not available, it means we are executing the script manually.
+$taskCommentId = Get-InboundObjectId
+
+if ($null -eq $taskCommentId) {
+  # If the inbound object id is not available, it means we are executing the script manually.
   # In this case, we'll set an id directly for testing purposes
   $taskCommentId = 22178
-} else {
-  # The script was executed by an event, so we'll have access to the event object
-  $taskCommentId = $agilityBlueEvent.Payload.Id
 }
 
 # Here, we are retrieving the comment and including the parent task so we can access 
-# task properties.
+# task properties without having to separately retrieve the task.
 $taskComment = Get-TaskComment $taskCommentId -IncludeTask
 
 # We can uncomment this line to output the properties/values available to us
@@ -41,10 +37,11 @@ if ($taskComment.Value -like "*#close-task*") {
   Write-Output "Comment $($taskComment.TaskCommentId) on task $($taskComment.TaskId) contains a #close-task command. Closing the task..."
   
   # Here, we issue a complete task command and set the Task property to the result
-  $taskComment.Task = Set-CompleteTask $taskComment.TaskId
+  $updatedTask = Set-CompleteTask $taskComment.TaskId
   
   # The Set-CompleteTask cmdlet will return a task object that we can use for output
-  Write-Output "Task $($taskComment.TaskId) is now $($taskComment.Task.StatusDescription)"
-} else {
+  Write-Output "Task $($updatedTask.TaskId) is now $($updatedTask.StatusDescription)"
+}
+else {
   Write-Output "Comment $($taskComment.TaskCommentId) on task $($taskComment.TaskId) does not contain a #close-task command. No action will be performed."
 }

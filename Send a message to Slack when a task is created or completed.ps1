@@ -3,19 +3,16 @@
 # Send a message to Slack when a task is created or completed
 #
 # ------------------------------------------------------------------------------
-# [Post-Save Event Action]
-#
-# ------------------------------------------------------------------------------
 # Event triggers to setup:
-#   1) Object: Task, Action: Create
-#   2) Object: Task, Action: Update
+#   1) Object: Task, Action: On Create, Action State: After Save
+#   2) Object: Task, Action: On Update, Action State: After Save
 #
 # ------------------------------------------------------------------------------
 
 #region Define Variables
 
 # Place your Agility Blue URL here. It's used by the Slack message to link back to the task.
-$myAgilityBlueUrl = "https://agilityblue.com"
+$myAgilityBlueUrl = "https://my-company-subdomain.agilityblue.com"
 
 # Place your Slack webhook URL here. You get this from the Slack.
 $slackWebhookUrl = "https://hooks.slack.com/services/YOUR_SLACK_WEBHOOK_URL"
@@ -24,10 +21,10 @@ $slackWebhookUrl = "https://hooks.slack.com/services/YOUR_SLACK_WEBHOOK_URL"
 
 #region Initialization ---------------------------------------------------------
 
-$task = $agilityBlueObject
+$task = Get-InboundObjectInstance
 
 if ($null -eq $task) {
-  # If the object is not available, it means we are executing the script 
+  # If the inbound object is not available, it means we are executing the script 
   # manually. In this case, we'll get a task directly for testing purposes.
   $task = Get-Task 1000
   

@@ -12,11 +12,8 @@
 # within the application.
 #
 # ------------------------------------------------------------------------------
-# [Post-Save Event Action]
-#
-# ------------------------------------------------------------------------------
 # Event triggers to setup:
-#   1) Object: Matter, Action: Create
+#   1) Object: Matter, Action: On Create, Action State: After Save
 #
 # ------------------------------------------------------------------------------
 # USER PARAMETERS
@@ -38,13 +35,9 @@ Function Get-TasksByProjectId([Int64]$projectId) {
   # Initialize a generic list
   $tasksToReturn = New-Object 'System.Collections.Generic.List[System.Object]'
   
-  $taskTemplatesFilters = @(
-    @{ Field = "ProjectId"; Value = $projectId }
-  )
-  
   # Use the Agility Blue `Get-Tasks` PowerShell command followed by filters to retrieve a
   # collection of tasks
-  $taskTemplates = Get-Tasks -Filters $taskTemplatesFilters
+  $taskTemplates = Get-Tasks -Filter "ProjectId eq $($projectId)"
   
   if ($null -eq $taskTemplates -or $taskTemplates.TotalCount -eq 0) {
     Write-Error "Template tasks for project $($projectId) could not be found"
@@ -126,11 +119,7 @@ Function Add-TaskFromTemplate($taskTemplate, [Int64]$projectId) {
 # ------------------------------------------------------------------------------
 # SCRIPT BODY
 
-# The $agilityBlueObject variable is a special object that Agility Blue populates
-# if the script is triggered by an action. In the case of this script being
-# triggered by a matter being created, the $agilityBlueObject variable will contain
-# the matter object.
-$matter = $agilityBlueObject
+$matter = Get-InboundObjectInstance
 
 if ($null -eq $matter) {
   # If the event object is not available, it means we are executing the script 

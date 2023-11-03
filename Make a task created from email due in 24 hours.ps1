@@ -3,22 +3,17 @@
 # Make a task that was created from email due in 24 hours.
 #
 # ------------------------------------------------------------------------------
-# [Post-Save Event Action]
-#
-# ------------------------------------------------------------------------------
 # Event triggers to setup:
-#   1) Object: Task, Action: Create
+#   1) Object: Task, Action: On Create, Action State: After Save
 #
 # ------------------------------------------------------------------------------
 
-if ($null -eq $agilityBlueEvent) {
-  # If the event object is not available, it means we are executing the script manually.
+$taskId = Get-InboundObjectId
+
+if ($null -eq $taskId) {
+  # If the Get-InboundObjectId returns null, it means we are executing the script manually.
   # In this case, we'll set an id directly for testing purposes
   $taskId = 18764
-}
-else {
-  # The script was executed by an event, so we'll have access to the event object
-  $taskId = $agilityBlueEvent.Payload.Id
 }
 
 # Note here that we want to get a full task that includes the project it belongs to. 
@@ -34,9 +29,8 @@ $task = Get-Task $taskId -IncludeProject
 # for email which is always set when a task is created from email at the task level.
 
 if (($null -eq $task.Metadata) -or 
-  ($null -eq $task.Metadata.Dictionary) -or 
-  ($null -eq $task.Metadata.Dictionary.Source) -or 
-  ($task.Metadata.Dictionary.Source -ne "Email")) {
+  ($null -eq $task.Metadata.Source) -or 
+  ($task.Metadata.Source -ne "Email")) {
   Write-Output "Task $($task.TaskId) was not created from email so a due date will not be automatically applied"
   Exit
 }
@@ -45,11 +39,13 @@ if (($null -eq $task.Metadata) -or
 $dueDate = $task.CreatedOn.AddHours(24)
 
 # Set the due dates for the project and task
-$task.Project.DateDue = $dueDate
+$project = $task.Project;
+
+$project.DateDue = $dueDate
 $task.DateDue = $dueDate
 
 # then save each one
-$task.Project = Set-Project $task.Project
+$project = Set-Project $project
 $task = Set-Task $task
 
-Write-Output "Task $($task.TaskId) has been updated with a due date of $($task.DateDue) becuase it was created from email"
+Write-Output "Task $($task.TaskId) has been updated with a due date of $($task.DateDue) because it was created from email"

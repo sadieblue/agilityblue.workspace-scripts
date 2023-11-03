@@ -7,6 +7,7 @@
 # [Manual Execution]
 #
 # ------------------------------------------------------------------------------
+# USER PARAMETERS
 
 $gridId = "mattersGrid"
 $gridStateName = "Active Matters"
@@ -15,13 +16,9 @@ $sourceUserId = "37004c9a-93e3-473c-8f96-a0556bf6735c"
 # ------------------------------------------------------------------------------
 
 # Define the filters to find the grid state to copy
-$gridStateFilters = @(
-  @{ Field = "GridId"; Value = $gridId }
-  @{ Field = "Name"; Value = $gridStateName }
-  @{ Field = "UserId"; Value = $sourceUserId }
-)
+$gridStateFilter = "GridId eq '$gridId' and Name eq '$gridStateName' and UserId eq '$sourceUserId'"
 
-$gridStates = Get-GridStates -Filter $gridStateFilters
+$gridStates = Get-GridStates -Filter $gridStateFilter
 
 if ($gridStates.TotalCount -eq 0) {
   Write-Output "No grid state found to copy"
@@ -33,18 +30,10 @@ $gridStateToCopy = $gridStates.Collection[0]
 # Define the filters to find the users to copy the grid state to
 # For example, it only makes sense to copy a grid state to users that
 # are active, not deleted, not system accounts, and not a team account.
-# Note that if "Type" is not defined, it defaults to "Where", and if
-# "Operator" is not defined, it defaults to "=".
-$workspaceUsersFilter = @(
-  @{ Field = "Active"; Value = $true }
-  @{ Field = "Deleted"; Value = $false }
-  @{ Field = "IsSystemAccount"; Value = $false }
-  @{ Field = "IsTeamAccount"; Value = $false }
-  @{ Field = "Id"; Operator = "<>"; Value = $sourceUserId }
-)
+$workspaceUsersFilter = "Active eq true and Deleted eq false and IsSystemAccount eq false and IsTeamAccount eq false and Id ne '$sourceUserId'"
 
 # Get the collection of server-filtered workspace users
-$usersToCopyTo = Get-WorkspaceUsers -Filters $workspaceUsersFilter -Top 1000
+$usersToCopyTo = Get-WorkspaceUsers -Filter $workspaceUsersFilter -Top 1000
 
 if ($usersToCopyTo.TotalCount -eq 0) {
   Write-Output "No users found"
@@ -66,13 +55,9 @@ if ($usersToCopyTo.TotalCount -eq 0) {
 $usersToCopyTo | ForEach-Object {
   $user = $_
   
-  $gridStateFilters = @(
-    @{ Field = "GridId"; Value = $gridId }
-    @{ Field = "Name"; Value = $gridStateName }
-    @{ Field = "UserId"; Value = $user.Id }
-  )
+  $gridStateFilter = "GridId eq '$gridId' and Name eq '$gridStateName' and UserId eq '$($user.Id)'"
 
-  $gridStates = Get-GridStates -Filter $gridStateFilters
+  $gridStates = Get-GridStates -Filter $gridStateFilter
 
   # We only want to create the grid state if the grid states call returns 0 results.
   if ($gridStates.TotalCount -eq 0) {

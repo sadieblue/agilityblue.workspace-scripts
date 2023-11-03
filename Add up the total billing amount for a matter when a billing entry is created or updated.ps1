@@ -5,12 +5,9 @@
 # custom field on the matter.
 #
 # ------------------------------------------------------------------------------
-# [Post-Save Event Action]
-#
-# ------------------------------------------------------------------------------
 # Event triggers to setup:
-#   1) Object: Billing Entry, Action: Create
-#   2) Object: Billing Entry, Action: Update
+#   1) Object: Billing Entry, Action: On Create, Action State: After Save
+#   2) Object: Billing Entry, Action: On Update, Action State: After Save
 #
 # ------------------------------------------------------------------------------
 # Custom Fields to setup:
@@ -19,7 +16,8 @@
 # ------------------------------------------------------------------------------
 # Caveats:
 #   1) This script does not handle deleted billing entries because by the time the
-#      script is executed, the billing entry is already deleted and cannot be queried.  
+#      script is executed, the billing entry is already deleted and cannot be queried.
+#      This can be handled by converting this script to a pre-save event script.  
 #   2) This script does not handle billing entries that have been moved to a 
 #      different matter where the billing entry was not directly updated (such as
 #      moving the project or task the billing entry is attached to). To accomodate 
@@ -27,7 +25,12 @@
 #
 # ------------------------------------------------------------------------------
 
-$billingEntry = $agilityBlueObject
+# This culture info is just used to display the currency using a dollar symbol in the log
+$usCulture = [Globalization.CultureInfo]::GetCultureInfo("en-US")
+
+# The Get-InboundObjectInstance command will give you the object instance that was saved. 
+# The type of object is dependent on the trigger context.
+$billingEntry = Get-InboundObjectInstance
 
 if ($null -eq $billingEntry) {
   # If the event object is not available, it means we are executing the script 
@@ -56,13 +59,11 @@ $count = 0
 $billingEntriesTop = 1000
 $billingEntriesSkip = 0
 
-$billingEntriesFilters = @(
-  @{ Field = "MatterId"; Value = $billingEntry.MatterId }
-)
+$billingEntriesFilter = "MatterId eq $($billingEntry.MatterId)"
 
 do {
   $matterBillingEntries = Get-BillingEntries `
-    -Filters $billingEntriesFilters `
+    -Filter $billingEntriesFilter `
     -Top $billingEntriesTop `
     -Skip $billingEntriesSkip
 
@@ -84,7 +85,7 @@ if ($null -eq $totalBillingAmountCustomField) {
   Write-Output "Decimal custom field 'Total Billing Amount' not found on matter $($matter.MatterId)"
 
   # Uncomment this line to help troubleshoot why the field may be reported as missing
-  $matter | ConvertTo-Json -Depth 10
+  # $matter | ConvertTo-Json -Depth 10
   Exit
 }
 
@@ -96,4 +97,4 @@ $totalBillingAmountCustomField.Value = @{
 # Save the matter
 $matter = Set-Matter $matter
 
-Write-Output "Matter '$($matter.Name)' (id: $($matter.MatterId)) contains $($count.ToString('N0')) billing entries totaling $($sum.ToString('C'))"
+Write-Output "Matter '$($matter.Name)' (id: $($matter.MatterId)) contains $($count.ToString('N0')) billing entries totaling $($sum.ToString('C', $usCulture))"
