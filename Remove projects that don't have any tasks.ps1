@@ -15,7 +15,7 @@ $noTasksFilter = "(ProjectTypeName eq 'Normal' or ProjectTypeName eq 'Draft') an
 # Retreive the list of projects that match the filter
 $projectsToDelete = Get-Projects -Filter $noTasksFilter -Top 1000
 
-if ($gridStates.TotalCount -eq 0) {
+if ($projectsToDelete.TotalCount -eq 0) {
   # No projects were found, exit the script
   Write-Output "No projects found with 0 tasks"
   Exit
