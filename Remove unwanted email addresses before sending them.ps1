@@ -2,7 +2,7 @@
 #
 # This script will remove email addresses and associated contacts from an email
 # message prior to sending it from the system. It can help with preventing the
-# system from sending an email to an unwanted distribution groups that are set
+# system from sending an email to unwanted distribution groups that are set
 # up to send emails back to Agility Blue
 #
 # ------------------------------------------------------------------------------
