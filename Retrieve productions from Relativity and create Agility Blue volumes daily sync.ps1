@@ -76,7 +76,7 @@ if ($null -eq $relativityIntegration) {
     exit
 }
 
-# Test the Realtivity connection. If Agility Blue doesn't get a valid response from Relativity, terminate 
+# Test the Relativity connection. If Agility Blue doesn't get a valid response from Relativity, terminate 
 # the script to reduce further unnecessary calls. The `Test-RelativityConnection` cmdlet returns true
 # or false depending on if the connection is successful or not.
 $relativityConnectionTestSuccessful = Test-RelativityConnection `
