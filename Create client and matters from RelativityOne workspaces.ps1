@@ -119,7 +119,7 @@ function Process-RelativityWorkspaces {
     )
 
     if (-not $clientName -or -not $matterName) {
-      Write-Error "Missing required metric fields for workspace $($relativityWorkspace.Name). Expected 'Client Name' and 'Matter Name'."
+      Write-Output "Missing required metric fields for workspace '$($relativityWorkspace.Name)' ($($relativityWorkspace.ArtifactID)). Expected 'Client Name' and 'Matter Name'. Perhaps metrics have not yet been collected for this workspace?"
       continue
     }
 
